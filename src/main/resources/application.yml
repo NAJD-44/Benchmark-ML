@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/benchmark_db4
+    username: postgres
+    password: postgres
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 20
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc.time_zone: UTC
+        cache.use_second_level_cache: false
+        cache.use_query_cache: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+
+logging:
+  level:
+    org.hibernate.SQL: off
+    org.hibernate.orm.jdbc.bind: off
+
+# Flag anti-N+1 (profil par défaut = baseline)
+app:
+  optimized-join: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: optimized
+app:
+  optimized-join: true
